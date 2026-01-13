@@ -22,47 +22,45 @@
 아래는 "analysis_report.py" 실행하여 생성된 파일들을 바탕으로 분석한 결과입니다.
 
 1. 주요 성능 지표 (전체 평균)
+
 평균 정확도 (Accuracy): 약 88.11%
 평균 BLEU-4 Score: 약 0.2731
 평균 F1-Score: 약 0.8683
 평균 정밀도 (Precision): 약 0.8661
 
 2. BLEU-4 Score 기준 상위 10개 및 하위 10개 클래스 분석(BLEU-4, Accuracy)
-[Top 10 Classes by BLEU-4 Mean]
--------------------------------------------------------------------
-Class                          | BLEU-4 Mean | Accuracy
--------------------------------------------------------------------
-beaker                         | 0.5266      | 0.9000
-spider                         | 0.4408      | 0.8667
-cannon                         | 0.4330      | 0.0000
-bullfrog                       | 0.4292      | 1.0000
-balloon                        | 0.4104      | 0.9667
-bald_eagle                     | 0.4011      | 0.9667
-black_and_gold_garden_spider   | 0.3846      | 0.8667
-carpenter_s_kit                | 0.3807      | 0.9000
-car_wheel                      | 0.3786      | 1.0000
-barracouta                     | 0.3777      | 0.9667
--------------------------------------------------------------------
-TOP 10 AVERAGE                 | 0.4163      | 0.8433
--------------------------------------------------------------------
 
-[Bottom 10 Classes by BLEU-4 Mean]
--------------------------------------------------------------------
-Class                          | BLEU-4 Mean | Accuracy
--------------------------------------------------------------------
-backpack                       | 0.0741      | 0.9000
-binoculars                     | 0.0932      | 0.8333
-airedale                       | 0.1260      | 1.0000
-barrel                         | 0.1335      | 0.8000
-agama                          | 0.1336      | 0.9667
-african_chameleon              | 0.1494      | 0.9000
-african_crocodile              | 0.1628      | 0.9333
-american_staffordshire_terrier | 0.1652      | 0.9333
-admiral                        | 0.1716      | 1.0000
-african_elephant               | 0.1762      | 1.0000
--------------------------------------------------------------------
-BOTTOM 10 AVERAGE              | 0.1386      | 0.9267
--------------------------------------------------------------------
+### [Top 10 Classes by BLEU-4 Mean]
+
+| Class | BLEU-4 Mean | Accuracy |
+| :--- | :---: | :---: |
+| beaker | 0.5266 | 0.9000 |
+| spider | 0.4408 | 0.8667 |
+| cannon | 0.4330 | 0.0000 |
+| bullfrog | 0.4292 | 1.0000 |
+| balloon | 0.4104 | 0.9667 |
+| bald_eagle | 0.4011 | 0.9667 |
+| black_and_gold_garden_spider | 0.3846 | 0.8667 |
+| carpenter_s_kit | 0.3807 | 0.9000 |
+| car_wheel | 0.3786 | 1.0000 |
+| barracouta | 0.3777 | 0.9667 |
+| **TOP 10 AVERAGE** | **0.4163** | **0.8433** |
+
+### [Bottom 10 Classes by BLEU-4 Mean]
+
+| Class | BLEU-4 Mean | Accuracy |
+| :--- | :---: | :---: |
+| backpack | 0.0741 | 0.9000 |
+| binoculars | 0.0932 | 0.8333 |
+| airedale | 0.1260 | 1.0000 |
+| barrel | 0.1335 | 0.8000 |
+| agama | 0.1336 | 0.9667 |
+| african_chameleon | 0.1494 | 0.9000 |
+| african_crocodile | 0.1628 | 0.9333 |
+| american_staffordshire_terrier | 0.1652 | 0.9333 |
+| admiral | 0.1716 | 1.0000 |
+| african_elephant | 0.1762 | 1.0000 |
+| **BOTTOM 10 AVERAGE** | **0.1386** | **0.9267** |
 
 3. 결과 요약
 BLEU-4 점수가 높은 상위 10개 클래스의 평균 정확도(84.33%)가 하위 10개 클래스의 평균 정확도(92.67%)보다 낮게 나타났습니다. 이는 모델이 이미지를 정확하게 분류하지 못하더라도, 해당 클래스의 특징적인 문장 구조를 생성하는 능력은 높을 수 있음을 시사합니다.
@@ -86,13 +84,15 @@ pip3 install -r requirements.txt
 ** Execution Steps **
 
 * For User
+
 1) 미리 학습된 모델을 아래 링크를 통해 다운 받으세요.
 https://drive.google.com/drive/folders/1GOOzF9J4YITn1SimxxeiJzHmtDYS8J6H?usp=sharing
 2) 모델을 로드하여 검증 데이터셋(val)에 대한 상세 보고서를 생성합니다.
 3) "test_inference.py"를 실행하여 테스트 데이터셋(test)에서 서로 다른 20개의 클래스를 임의로 선정하고 각 클래스별 이미지 1장을 추론하여 결과물을 보여주고 이미지 파일로 저장합니다. 
 
 * For Developer
-필요한 라이브러리(requirements.txt)를 설치한 후, 아래 순서대로 스크립트를 실행하면 됩니다.
+
+필요한 라이브러리(requirements.txt)를 설치한 후, 아래 순서대로 스크립트를 실행하면 됩니다.gir 
 1) 학습 데이터에서 빈도수가 높은 단어를 추출하여 사전을 만듭니다. -> "vocab_#.pkl" 생성
 2) 생성된 .pkl 파일의 이름을 "data_loader.py" 의 전역변수(CONFIG) 중 'vocab_path'에 붙여 넣습니다.
 3) "model.py"를 실행한 후, "train.py" 내의 'CONFIG' 에서 최적의 학습에 적합한 변수를 설정한 후 학습을 시작합니다.
