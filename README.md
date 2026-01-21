@@ -147,7 +147,10 @@ MobileNet은 이미지에서 가장 지배적인 특징을 신속하게 추출�
 │       ├── best_model.pth
 │       └── vocab_3.pkl
 ├── src/                       # 소스 코드
-│   └── app.py
+│   ├── app.py
+│   ├── inference_blip.py
+│   ├── inference_mobilenet.py
+│   └── model_arch.py
 ├── .gitattributes             # LFS 관리 설정
 ├── Dockerfile                 # Docker 이미지 생성 설정
 ├── docker-compose.yml         # 멀티 컨테이너 실행 설정
