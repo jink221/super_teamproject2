@@ -1,0 +1,79 @@
+#google colab drive환경
+from google.colab import drive
+import os
+import shutil
+import random
+import tarfile
+
+# 1. 구글 드라이브 마운트
+drive.mount('/content/drive')
+
+# 2. 설정 및 경로 지정
+random.seed(42)
+Target_count = 300
+split_ratios = {'train': 0.8, 'val': 0.1, 'test': 0.1}
+
+# 원본 데이터 경로 (구글 드라이브)
+Source_dir = '/content/drive/MyDrive/original_data'
+# 분할 데이터 저장 경로 (Colab 로컬 환경 - 처리 속도가 빠름)
+Base_dir = 'data' 
+
+# 3. 폴더 구조 생성
+os.makedirs(Base_dir, exist_ok=True)
+for subset in split_ratios.keys():
+    os.makedirs(os.path.join(Base_dir, subset), exist_ok=True)
+print(f"대상 폴더 구조 생성 완료: {os.listdir(Base_dir)}")
+
+# 4. 클래스 목록 가져오기
+class_names = [d for d in os.listdir(Source_dir) if os.path.isdir(os.path.join(Source_dir, d))]
+
+# 5. 데이터 분할 및 복사 루프
+for class_name in class_names:
+    class_path = os.path.join(Source_dir, class_name)
+    images = [f for f in os.listdir(class_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+
+    # Target_count에 맞춰 샘플링
+    if len(images) > Target_count:
+        images = random.sample(images, Target_count)
+    total_images = len(images)
+
+    # 셔플 및 분할 지점 계산
+    random.shuffle(images)
+    train_split = int(total_images * split_ratios['train'])
+    val_split = int(total_images * split_ratios['val'])
+
+    split_data = {
+        'train': images[:train_split],
+        'val': images[train_split:train_split + val_split],
+        'test': images[train_split + val_split:]
+    }
+
+    # 파일 복사 실행
+    for subset, image_list in split_data.items():
+        target_class_path = os.path.join(Base_dir, subset, class_name)
+        os.makedirs(target_class_path, exist_ok=True)
+
+        for image_file in image_list:
+            src_file = os.path.join(class_path, image_file)
+            dst_file = os.path.join(target_class_path, image_file)
+            shutil.copy(src_file, dst_file)
+            
+    print(f"클래스 '{class_name}': Train={len(split_data['train'])}, Val={len(split_data['val'])}, Test={len(split_data['test'])} 분할 완료. (총 {total_images}장)")
+
+print("\n✨ 모든 데이터 분할 및 로컬 복사가 완료되었습니다.")
+
+# ---------------------------------------------------------
+# 6. 구글 드라이브로 최종 결과물 저장
+# ---------------------------------------------------------
+
+# drive_save_path = '/content/drive/MyDrive/processed_data_final'
+# if os.path.exists(drive_save_path):
+#     shutil.rmtree(drive_save_path) # 기존 폴더가 있으면 삭제
+# shutil.copytree(Base_dir, drive_save_path)
+# print(f"🚀 폴더 복사 완료: {drive_save_path}")
+
+# 최종 확인
+for subset in split_ratios.keys():
+    subset_path = os.path.join(Base_dir, subset)
+    total_files = sum([len(files) for r, d, files in os.walk(subset_path)])
+    print(f"✅ {subset} 세트 최종 확인: {total_files}장")
